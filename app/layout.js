@@ -6,6 +6,7 @@ import Cursor from "@/components/Cursor";
 import SmoothScroll from "@/components/SmoothScroll";
 import CommandPalette from "@/components/CommandPalette";
 import "./globals.css";
+import "./refinements.css";
 
 export const metadata = {
   metadataBase: new URL("https://shrutiphad.tech"),

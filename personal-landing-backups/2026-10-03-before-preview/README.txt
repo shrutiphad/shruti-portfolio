@@ -1,0 +1,1 @@
+Original landing design before the 2026-10-03 preview. Port 3002 retains this design with only the two requested copy corrections. To restore pre-correction copy as well, copy these dist files back into personal-landing/dist. No assets were changed.

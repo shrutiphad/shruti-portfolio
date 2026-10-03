@@ -31,10 +31,10 @@ export default function CapabilityDeck({ items = [] }) {
             type="button"
             key={item.key}
             className="deck__tab"
+            aria-pressed={i === active}
+            aria-controls="capability-content"
             data-on={i === active ? "1" : "0"}
             data-cursor="link"
-            onMouseEnter={() => setActive(i)}
-            onFocus={() => setActive(i)}
             onClick={() => setActive(i)}
             style={{ "--tint": toneVar[item.accent] || "var(--blue)" }}
           >
@@ -46,6 +46,7 @@ export default function CapabilityDeck({ items = [] }) {
       </div>
 
       <motion.div
+        id="capability-content"
         className="deck__stage"
         key={cap.key}
         initial={{ opacity: 0 }}

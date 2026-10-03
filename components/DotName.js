@@ -22,6 +22,8 @@ export default function DotName({ text = "Shruti Phad", className = "" }) {
     const ctx = canvas.getContext("2d", { alpha: true });
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 
+    let visible = true;
+    let disposed = false;
     let dots = [];
     let raf = 0;
     let w = 0;
@@ -91,9 +93,13 @@ export default function DotName({ text = "Shruti Phad", className = "" }) {
       }
       dots = next;
       started = performance.now();
+      if (!raf && visible && !disposed) raf = requestAnimationFrame(frame);
     };
 
     const frame = (now) => {
+      raf = 0;
+      if (disposed || !visible) return;
+      let moving = false;
       const { fg, blue } = colours();
       ctx.clearRect(0, 0, w, h);
 
@@ -132,6 +138,7 @@ export default function DotName({ text = "Shruti Phad", className = "" }) {
         }
 
         const speed = Math.min(Math.abs(d.vx) + Math.abs(d.vy), 6);
+        if (speed > .02) moving = true;
         ctx.beginPath();
         ctx.arc(d.x, d.y, d.r + speed * 0.1, 0, Math.PI * 2);
         ctx.fillStyle = d.blue ? blue : fg;
@@ -139,7 +146,7 @@ export default function DotName({ text = "Shruti Phad", className = "" }) {
         ctx.fill();
       }
       ctx.globalAlpha = 1;
-      raf = requestAnimationFrame(frame);
+      if (!reduce.matches && (t < 1800 || pointer.active || moving)) raf = requestAnimationFrame(frame);
     };
 
     const onMove = (e) => {
@@ -148,6 +155,7 @@ export default function DotName({ text = "Shruti Phad", className = "" }) {
       pointer.y = e.clientY - rect.top;
       pointer.active =
         pointer.x > -140 && pointer.x < w + 140 && pointer.y > -140 && pointer.y < h + 140;
+      if (!raf && visible && !reduce.matches && pointer.active) raf = requestAnimationFrame(frame);
     };
 
     const onOut = () => {
@@ -156,17 +164,23 @@ export default function DotName({ text = "Shruti Phad", className = "" }) {
 
     const fonts = document.fonts?.ready ?? Promise.resolve();
     fonts.then(() => {
-      build();
-      raf = requestAnimationFrame(frame);
+      if (!disposed) build();
     });
 
     const ro = new ResizeObserver(() => build());
     ro.observe(wrap);
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseout", onOut);
-    window.addEventListener("sp:invert", () => {});
+    const visibility = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible && !raf) raf = requestAnimationFrame(frame);
+      if (!visible) { cancelAnimationFrame(raf); raf = 0; }
+    });
+    visibility.observe(wrap);
 
     return () => {
+      disposed = true;
+      visibility.disconnect();
       cancelAnimationFrame(raf);
       ro.disconnect();
       window.removeEventListener("mousemove", onMove);

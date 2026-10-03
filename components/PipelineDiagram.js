@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useId, useEffect, useState, createContext, useContext } from "react";
 import { motion, useInView } from "framer-motion";
 
 /**
@@ -9,6 +9,13 @@ import { motion, useInView } from "framer-motion";
  * than describing it. Strokes inherit the panel's foreground colour; only the
  * packets and the one node that matters are blue.
  */
+
+const DiagramScope = createContext("");
+
+function ScopedPath(props) {
+  const scope = useContext(DiagramScope);
+  return <motion.path {...props} id={props.id ? `${scope}-${props.id}` : undefined} />;
+}
 
 const draw = {
   hidden: { pathLength: 0, opacity: 0 },
@@ -43,17 +50,18 @@ const grow = {
 
 function Label({ x, y, children, anchor = "start", dim = true }) {
   return (
-    <text x={x} y={y} textAnchor={anchor} className="dg__label" style={{ opacity: dim ? 0.55 : 1 }}>
+    <text x={x} y={y} textAnchor={anchor} className="dg__label" style={{ opacity: dim ? 0.9 : 1 }}>
       {children}
     </text>
   );
 }
 
 function Packet({ id, dur = 3.4, begin = "0s", r = 3.2 }) {
+  const scope = useContext(DiagramScope);
   return (
     <circle r={r} className="dg__packet">
       <animateMotion dur={`${dur}s`} begin={begin} repeatCount="indefinite" rotate="auto">
-        <mpath href={`#${id}`} />
+        <mpath href={`#${scope}-${id}`} />
       </animateMotion>
       <animate
         attributeName="opacity"
@@ -75,7 +83,7 @@ function Attribution() {
   return (
     <>
       {[70, 150, 230].map((y, i) => (
-        <motion.path
+        <ScopedPath
           key={y}
           id={`atr-${i}`}
           d={`M 58 ${y} C 150 ${y}, 200 150, 292 150`}
@@ -84,9 +92,9 @@ function Attribution() {
           custom={i}
         />
       ))}
-      <motion.path id="atr-spine" d="M 292 150 L 566 150" className="dg__line dg__line--key" variants={draw} custom={3} />
-      <motion.path id="atr-out-1" d="M 566 150 C 640 150, 660 78, 742 78" className="dg__line" variants={draw} custom={4} />
-      <motion.path id="atr-out-2" d="M 566 150 C 640 150, 660 222, 742 222" className="dg__line" variants={draw} custom={4.4} />
+      <ScopedPath id="atr-spine" d="M 292 150 L 566 150" className="dg__line dg__line--key" variants={draw} custom={3} />
+      <ScopedPath id="atr-out-1" d="M 566 150 C 640 150, 660 78, 742 78" className="dg__line" variants={draw} custom={4} />
+      <ScopedPath id="atr-out-2" d="M 566 150 C 640 150, 660 222, 742 222" className="dg__line" variants={draw} custom={4.4} />
 
       {[70, 150, 230].map((y, i) => (
         <motion.rect key={y} x="44" y={y - 7} width="14" height="14" className="dg__node" variants={pop} custom={i} />
@@ -130,7 +138,7 @@ function Engine() {
   return (
     <>
       {rungs.slice(0, 3).map((r, i) => (
-        <motion.path
+        <ScopedPath
           key={r.label}
           id={`en-${i}`}
           d={`M 62 ${r.y + 14} L 62 ${rungs[i + 1].y - 14}`}
@@ -158,14 +166,14 @@ function Engine() {
       ))}
 
       {/* the curve — enrich, score, route */}
-      <motion.path
+      <ScopedPath
         id="en-base"
         d="M 250 292 L 492 292"
         className="dg__line"
         variants={draw}
         custom={1.4}
       />
-      <motion.path
+      <ScopedPath
         id="en-curve"
         d="M 250 274 C 320 272, 352 238, 384 178 C 412 126, 440 76, 492 60"
         className="dg__line dg__line--key"
@@ -188,7 +196,7 @@ function Engine() {
         />
       ))}
       {[250, 316, 382, 448].map((x) => (
-        <motion.path
+        <ScopedPath
           key={`t${x}`}
           d={`M ${x} 292 L ${x} 300`}
           className="dg__line"
@@ -222,13 +230,13 @@ function Circuit({ stops = [] }) {
     "L 410 46 L 530 46 L 530 74 L 660 74 L 660 100 L 770 100 L 836 100";
   return (
     <>
-      <motion.path id="ck-trace" d={d} className="dg__line dg__line--key" variants={draw} custom={0} />
+      <ScopedPath id="ck-trace" d={d} className="dg__line dg__line--key" variants={draw} custom={0} />
       {[
         [24, 110, 210, 110],
         [24, 26, 120, 26],
         [600, 26, 836, 26],
       ].map((seg, i) => (
-        <motion.path
+        <ScopedPath
           key={`s${i}`}
           d={`M ${seg[0]} ${seg[1]} L ${seg[2]} ${seg[3]}`}
           className="dg__line"
@@ -280,7 +288,7 @@ function GtmTools() {
   return (
     <>
       {ys.map((y, i) => (
-        <motion.path
+        <ScopedPath
           key={y}
           id={`gt-${i}`}
           d={`M 132 ${y} C 210 ${y}, 230 150, 288 150`}
@@ -298,9 +306,9 @@ function GtmTools() {
         </Label>
       ))}
 
-      <motion.path id="gt-a" d="M 312 150 L 438 150" className="dg__line dg__line--key" variants={draw} custom={1} />
-      <motion.path id="gt-b" d="M 462 150 L 588 150" className="dg__line dg__line--key" variants={draw} custom={1.3} />
-      <motion.path id="gt-c" d="M 612 150 L 748 150" className="dg__line dg__line--key" variants={draw} custom={1.6} />
+      <ScopedPath id="gt-a" d="M 312 150 L 438 150" className="dg__line dg__line--key" variants={draw} custom={1} />
+      <ScopedPath id="gt-b" d="M 462 150 L 588 150" className="dg__line dg__line--key" variants={draw} custom={1.3} />
+      <ScopedPath id="gt-c" d="M 612 150 L 748 150" className="dg__line dg__line--key" variants={draw} custom={1.6} />
       {spine.map((s, i) => (
         <motion.rect
           key={s.label}
@@ -324,7 +332,7 @@ function GtmTools() {
       <Label x="786" y="154" dim={false}>CRM</Label>
 
       {/* compound — the stage everyone skips */}
-      <motion.path
+      <ScopedPath
         id="gt-loop"
         d="M 762 164 C 762 250, 520 268, 300 268 C 240 268, 200 220, 200 180"
         className="dg__line"
@@ -381,10 +389,10 @@ function Stack() {
         </g>
       ))}
 
-      <motion.path id="st-down" d="M 150 78 L 150 226 L 236 226" className="dg__line dg__line--key" variants={draw} custom={1} />
-      <motion.path id="st-up" d="M 624 226 L 710 226 L 710 78" className="dg__line dg__line--key" variants={draw} custom={1.4} />
-      <motion.path d="M 150 78 L 236 78" className="dg__line" variants={draw} custom={1.1} />
-      <motion.path d="M 624 78 L 710 78" className="dg__line" variants={draw} custom={1.5} />
+      <ScopedPath id="st-down" d="M 150 78 L 150 226 L 236 226" className="dg__line dg__line--key" variants={draw} custom={1} />
+      <ScopedPath id="st-up" d="M 624 226 L 710 226 L 710 78" className="dg__line dg__line--key" variants={draw} custom={1.4} />
+      <ScopedPath d="M 150 78 L 236 78" className="dg__line" variants={draw} custom={1.1} />
+      <ScopedPath d="M 624 78 L 710 78" className="dg__line" variants={draw} custom={1.5} />
 
       <Label x="40" y="82">REQUEST</Label>
       <Label x="726" y="82" dim={false}>ANSWER</Label>
@@ -403,10 +411,10 @@ function Stack() {
 function AgentFlow() {
   return (
     <>
-      <motion.path id="af-a" d="M 108 150 L 232 150" className="dg__line" variants={draw} custom={0} />
-      <motion.path id="af-b" d="M 296 150 L 402 150" className="dg__line dg__line--key" variants={draw} custom={0.5} />
-      <motion.path id="af-c" d="M 466 150 L 600 150" className="dg__line dg__line--key" variants={draw} custom={1} />
-      <motion.path
+      <ScopedPath id="af-a" d="M 108 150 L 232 150" className="dg__line" variants={draw} custom={0} />
+      <ScopedPath id="af-b" d="M 296 150 L 402 150" className="dg__line dg__line--key" variants={draw} custom={0.5} />
+      <ScopedPath id="af-c" d="M 466 150 L 600 150" className="dg__line dg__line--key" variants={draw} custom={1} />
+      <ScopedPath
         id="af-retry"
         d="M 434 118 C 434 66, 300 66, 264 96"
         className="dg__line"
@@ -457,7 +465,7 @@ function LoopCheck() {
   return (
     <>
       {stops.slice(0, 3).map((s, i) => (
-        <motion.path
+        <ScopedPath
           key={s.label}
           id={`lc-${i}`}
           d={`M ${s.x + 14} 120 L ${stops[i + 1].x - 14} 120`}
@@ -466,7 +474,7 @@ function LoopCheck() {
           custom={i * 0.4}
         />
       ))}
-      <motion.path
+      <ScopedPath
         id="lc-back"
         d="M 720 140 C 720 230, 400 246, 200 246 C 150 246, 130 190, 130 142"
         className="dg__line"
@@ -506,13 +514,13 @@ function LoopCheck() {
 function Hotel() {
   return (
     <>
-      <motion.path id="ht-in" d="M 96 150 L 208 150" className="dg__line" variants={draw} custom={0} />
-      <motion.path id="ht-yes" d="M 272 150 L 396 150" className="dg__line dg__line--key" variants={draw} custom={0.6} />
-      <motion.path id="ht-no" d="M 240 182 C 240 240, 300 248, 340 248 L 396 248" className="dg__line" variants={draw} custom={0.9} />
-      <motion.path id="ht-back" d="M 460 248 C 520 248, 520 176, 560 168" className="dg__line" variants={draw} custom={1.2} />
-      <motion.path id="ht-q" d="M 460 150 L 560 150" className="dg__line dg__line--key" variants={draw} custom={1.4} />
-      <motion.path id="ht-a" d="M 624 140 L 742 84" className="dg__line dg__line--key" variants={draw} custom={1.8} />
-      <motion.path id="ht-b" d="M 624 162 L 742 218" className="dg__line" variants={draw} custom={2} />
+      <ScopedPath id="ht-in" d="M 96 150 L 208 150" className="dg__line" variants={draw} custom={0} />
+      <ScopedPath id="ht-yes" d="M 272 150 L 396 150" className="dg__line dg__line--key" variants={draw} custom={0.6} />
+      <ScopedPath id="ht-no" d="M 240 182 C 240 240, 300 248, 340 248 L 396 248" className="dg__line" variants={draw} custom={0.9} />
+      <ScopedPath id="ht-back" d="M 460 248 C 520 248, 520 176, 560 168" className="dg__line" variants={draw} custom={1.2} />
+      <ScopedPath id="ht-q" d="M 460 150 L 560 150" className="dg__line dg__line--key" variants={draw} custom={1.4} />
+      <ScopedPath id="ht-a" d="M 624 140 L 742 84" className="dg__line dg__line--key" variants={draw} custom={1.8} />
+      <ScopedPath id="ht-b" d="M 624 162 L 742 218" className="dg__line" variants={draw} custom={2} />
 
       <motion.rect x="68" y="138" width="24" height="24" className="dg__node" variants={pop} custom={0} />
       <motion.rect x="220" y="130" width="40" height="40" transform="rotate(45 240 150)" className="dg__node dg__node--key" variants={pop} custom={0.6} />
@@ -550,10 +558,10 @@ function AutoDraft() {
   const tools = ["TEMPLATE", "CLIENT PROFILE", "BENCHMARK", "DATE"];
   return (
     <>
-      <motion.path id="ad-a" d="M 92 150 L 186 150" className="dg__line" variants={draw} custom={0} />
-      <motion.path id="ad-b" d="M 258 150 L 348 150" className="dg__line dg__line--key" variants={draw} custom={0.5} />
+      <ScopedPath id="ad-a" d="M 92 150 L 186 150" className="dg__line" variants={draw} custom={0} />
+      <ScopedPath id="ad-b" d="M 258 150 L 348 150" className="dg__line dg__line--key" variants={draw} custom={0.5} />
       {tools.map((t, i) => (
-        <motion.path
+        <ScopedPath
           key={t}
           id={`ad-t-${i}`}
           d={`M 400 122 C 430 ${40 + i * 14}, 470 ${44 + i * 12}, 512 ${44 + i * 12}`}
@@ -562,9 +570,9 @@ function AutoDraft() {
           custom={0.9 + i * 0.12}
         />
       ))}
-      <motion.path id="ad-c" d="M 452 150 L 556 150" className="dg__line dg__line--key" variants={draw} custom={1.5} />
-      <motion.path id="ad-d" d="M 620 150 L 742 150" className="dg__line dg__line--key" variants={draw} custom={1.9} />
-      <motion.path id="ad-rej" d="M 588 182 C 588 240, 420 246, 400 200" className="dg__line" variants={draw} custom={2.1} />
+      <ScopedPath id="ad-c" d="M 452 150 L 556 150" className="dg__line dg__line--key" variants={draw} custom={1.5} />
+      <ScopedPath id="ad-d" d="M 620 150 L 742 150" className="dg__line dg__line--key" variants={draw} custom={1.9} />
+      <ScopedPath id="ad-rej" d="M 588 182 C 588 240, 420 246, 400 200" className="dg__line" variants={draw} custom={2.1} />
 
       <motion.rect x="68" y="138" width="24" height="24" className="dg__node" variants={pop} custom={0} />
       <motion.rect x="186" y="128" width="72" height="44" rx="2" className="dg__node" variants={pop} custom={0.5} />
@@ -610,10 +618,10 @@ function Agent() {
 
   return (
     <>
-      <motion.path id="ag-in" d="M 58 150 L 236 150" className="dg__line" variants={draw} custom={0} />
-      <motion.path id="ag-router" d="M 276 150 L 366 150" className="dg__line dg__line--key" variants={draw} custom={1} />
+      <ScopedPath id="ag-in" d="M 58 150 L 236 150" className="dg__line" variants={draw} custom={0} />
+      <ScopedPath id="ag-router" d="M 276 150 L 366 150" className="dg__line dg__line--key" variants={draw} custom={1} />
       {tools.map((t, i) => (
-        <motion.path
+        <ScopedPath
           key={t.label}
           id={`ag-t-${i}`}
           d={`M 366 150 C 440 150, 470 ${t.y + 6}, ${t.x - 12} ${t.y + 6}`}
@@ -622,7 +630,7 @@ function Agent() {
           custom={1.4 + i * 0.15}
         />
       ))}
-      <motion.path id="ag-out" d="M 700 150 L 790 150" className="dg__line dg__line--key" variants={draw} custom={2.4} />
+      <ScopedPath id="ag-out" d="M 700 150 L 790 150" className="dg__line dg__line--key" variants={draw} custom={2.4} />
 
       <motion.rect x="44" y="143" width="14" height="14" className="dg__node" variants={pop} custom={0} />
       <motion.rect
@@ -690,7 +698,7 @@ function Vision() {
     <>
       <motion.rect x="40" y="70" width="230" height="180" className="dg__node" variants={pop} custom={0} rx="2" />
       {bones.map(([a, b], i) => (
-        <motion.path
+        <ScopedPath
           key={`b${i}`}
           d={`M ${pts[a][0]} ${pts[a][1]} L ${pts[b][0]} ${pts[b][1]}`}
           className="dg__line"
@@ -702,7 +710,7 @@ function Vision() {
         <motion.circle key={`p${i}`} cx={p[0]} cy={p[1]} r="2.6" className="dg__dot" variants={pop} custom={1.2 + i * 0.02} />
       ))}
 
-      <motion.path id="vs-a" d="M 270 160 L 396 160" className="dg__line dg__line--key" variants={draw} custom={2} />
+      <ScopedPath id="vs-a" d="M 270 160 L 396 160" className="dg__line dg__line--key" variants={draw} custom={2} />
       <motion.rect x="396" y="70" width="120" height="180" className="dg__node" variants={pop} custom={2.2} rx="2" />
       {bars.map((b, i) => (
         <motion.rect
@@ -717,7 +725,7 @@ function Vision() {
           custom={i}
         />
       ))}
-      <motion.path id="vs-b" d="M 516 160 L 660 160" className="dg__line dg__line--key" variants={draw} custom={3} />
+      <ScopedPath id="vs-b" d="M 516 160 L 660 160" className="dg__line dg__line--key" variants={draw} custom={3} />
       <motion.rect x="660" y="148" width="24" height="24" className="dg__node dg__node--key" variants={pop} custom={3.4} />
 
       <Label x="40" y="58">WEBCAM — LIVE FRAMES</Label>
@@ -756,7 +764,7 @@ function Match() {
         <motion.circle key={y} cx="70" cy={y} r="5" className="dg__node" variants={pop} custom={i * 0.1} />
       ))}
       {edges.map(([s, r], i) => (
-        <motion.path
+        <ScopedPath
           key={`e${i}`}
           id={`mt-${i}`}
           d={`M 76 ${students[s]} C 160 ${students[s]}, 200 ${roles[r]}, 286 ${roles[r]}`}
@@ -778,7 +786,7 @@ function Match() {
         />
       ))}
 
-      <motion.path id="mt-out" d="M 308 140 L 452 140" className="dg__line dg__line--key" variants={draw} custom={2.4} />
+      <ScopedPath id="mt-out" d="M 308 140 L 452 140" className="dg__line dg__line--key" variants={draw} custom={2.4} />
       <motion.rect x="452" y="62" width="300" height="158" className="dg__node" variants={pop} custom={2.6} rx="2" />
       {gaps.map((g, i) => (
         <motion.rect
@@ -827,7 +835,7 @@ function Sleep() {
   return (
     <>
       {leads.map((l, i) => (
-        <motion.path
+        <ScopedPath
           key={l.label}
           id={`sl-${i}`}
           d={`M 106 ${l.y} C 168 ${l.y}, 190 150, 248 150`}
@@ -848,10 +856,10 @@ function Sleep() {
       <motion.rect x="248" y="132" width="36" height="36" className="dg__node dg__node--key" variants={pop} custom={1} />
       <Label x="266" y="190" anchor="middle" dim={false}>ESP32-S3</Label>
 
-      <motion.path id="sl-ecg" d={ecg} className="dg__line dg__line--key" variants={draw} custom={1.4} />
+      <ScopedPath id="sl-ecg" d={ecg} className="dg__line dg__line--key" variants={draw} custom={1.4} />
       <Label x="300" y="104">10-SECOND BUFFERED WINDOW</Label>
 
-      <motion.path id="sl-out" d="M 596 150 L 668 150" className="dg__line dg__line--key" variants={draw} custom={2.4} />
+      <ScopedPath id="sl-out" d="M 596 150 L 668 150" className="dg__line dg__line--key" variants={draw} custom={2.4} />
       {modes.map((m, i) => (
         <motion.rect
           key={m}
@@ -869,7 +877,7 @@ function Sleep() {
           {m}
         </Label>
       ))}
-      <motion.path
+      <ScopedPath
         id="sl-fan"
         d="M 668 150 L 668 52 M 668 150 L 668 248"
         className="dg__line"
@@ -906,7 +914,7 @@ function Funnel() {
   return (
     <>
       {SOURCES.map((s, i) => (
-        <motion.path
+        <ScopedPath
           key={s}
           id={`fn-s-${i}`}
           d={`M 150 ${46 + i * 52} L 196 ${46 + i * 52} L 220 63`}
@@ -935,7 +943,7 @@ function Funnel() {
       ))}
 
       {/* the instrumentation spine every rung taps */}
-      <motion.path
+      <ScopedPath
         d="M 228 40 L 228 268"
         className="dg__line dg__line--key"
         variants={draw}
@@ -1011,7 +1019,7 @@ function Waterfall() {
         </Label>
       ))}
       {COLX.map((x, i) => (
-        <motion.path
+        <ScopedPath
           key={x}
           id={`wf-col-${i}`}
           d={`M ${x} 50 L ${x} 252`}
@@ -1028,7 +1036,7 @@ function Waterfall() {
         </Label>
       ))}
       {FIELDS.map((f, i) => (
-        <motion.path
+        <ScopedPath
           key={f.label}
           d={`M 262 ${73 + i * 52} L ${COLX[f.col]} ${73 + i * 52}`}
           className="dg__line"
@@ -1050,7 +1058,7 @@ function Waterfall() {
       ))}
 
       {/* the cascade: each miss steps right, never left */}
-      <motion.path
+      <ScopedPath
         id="wf-fall"
         d="M 300 73 L 300 125 L 470 125 L 470 177 L 470 229 L 640 229"
         className="dg__line dg__line--key"
@@ -1059,7 +1067,7 @@ function Waterfall() {
         pathLength="1"
       />
 
-      <motion.path
+      <ScopedPath
         d="M 646 229 L 716 229 L 716 73 L 760 73"
         className="dg__line"
         variants={draw}
@@ -1165,7 +1173,7 @@ function Taxonomy() {
       />
 
       {SPOKES.map((s, i) => (
-        <motion.path
+        <ScopedPath
           key={s.label}
           d={`M ${CX} ${CY} L ${s.x.toFixed(1)} ${s.y.toFixed(1)}`}
           className="dg__line"
@@ -1257,6 +1265,11 @@ const VARIANTS = {
 
 export default function PipelineDiagram({ variant = "attribution", caption, stops }) {
   const ref = useRef(null);
+  const [labels, setLabels] = useState([]);
+  useEffect(() => {
+    setLabels([...new Set(Array.from(ref.current.querySelectorAll("svg text"), node => node.textContent).filter(Boolean))]);
+  }, [variant]);
+  const scope = useId().replaceAll(":", "");
   const inView = useInView(ref, { once: true, margin: "0px 0px -60px 0px" });
   const conf = VARIANTS[variant] || VARIANTS.attribution;
   const Shape = conf.render;
@@ -1271,8 +1284,9 @@ export default function PipelineDiagram({ variant = "attribution", caption, stop
         role="img"
         aria-label={caption || "System schematic"}
       >
-        <Shape stops={stops} />
+        <DiagramScope.Provider value={scope}><Shape stops={stops} /></DiagramScope.Provider>
       </motion.svg>
+      <div className="dg__mobile-labels" aria-label="Schematic labels">{labels.map(label => <span key={label}>{label}</span>)}</div>
       {caption ? <figcaption className="dg__cap mono">{caption}</figcaption> : null}
     </figure>
   );

@@ -31,7 +31,7 @@ export default function DropBox({ to, placeholder }) {
       <motion.div
         className="drop"
         initial={{ y: -260, rotate: -6, opacity: 0 }}
-        animate={inView ? { y: 0, rotate: -0.6, opacity: 1 } : { y: -260, rotate: -6, opacity: 0 }}
+        animate={inView ? { y: 0, rotate: 0, opacity: 1 } : { y: -260, rotate: -6, opacity: 0 }}
         transition={{ type: "spring", stiffness: 130, damping: 11, mass: 1.1, delay: 0.12 }}
       >
         <div className="drop__head mono">
@@ -45,6 +45,7 @@ export default function DropBox({ to, placeholder }) {
           onChange={(e) => setBody(e.target.value)}
           onKeyDown={onKey}
           placeholder={placeholder}
+          aria-label="Your message"
           rows={4}
           spellCheck="false"
         />
@@ -56,15 +57,17 @@ export default function DropBox({ to, placeholder }) {
             onChange={(e) => setFrom(e.target.value)}
             onKeyDown={onKey}
             placeholder="YOUR EMAIL"
+            aria-label="Your email"
+            type="email"
             inputMode="email"
             spellCheck="false"
           />
           <button type="button" className="drop__send mono" onClick={send} data-cursor="link">
-            {sent ? "Opened ↗" : "Send →"}
+            {sent ? "Opened ↗" : "Open email →"}
           </button>
         </div>
 
-        <div className="drop__hint mono">⌘ + Return</div>
+        <div className="drop__hint">Opens your email app with a draft. You send it from there.</div>
       </motion.div>
     </div>
   );

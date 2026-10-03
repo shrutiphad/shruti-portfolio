@@ -1,0 +1,38 @@
+[
+  {
+    "Route": "/",
+    "Status": 200
+  },
+  {
+    "Route": "/projects",
+    "Status": 200
+  },
+  {
+    "Route": "/projects/revenue-attribution-pipeline",
+    "Status": 200
+  },
+  {
+    "Route": "/projects/hotel-receptionist",
+    "Status": 200
+  },
+  {
+    "Route": "/projects/debrief",
+    "Status": 200
+  },
+  {
+    "Route": "/projects/autodraft",
+    "Status": 200
+  },
+  {
+    "Route": "/projects/uniplacement",
+    "Status": 200
+  },
+  {
+    "Route": "/projects/sleepcare",
+    "Status": 200
+  },
+  {
+    "Route": "/shruti-phad-resume.pdf",
+    "Status": 200
+  }
+]

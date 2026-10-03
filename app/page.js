@@ -1,4 +1,6 @@
 import Link from "next/link";
+import HeroPortrait from "@/components/HeroPortrait";
+import OriginMap from "@/components/OriginMap";
 import Panel from "@/components/Panel";
 import DotName from "@/components/DotName";
 import PipelineDiagram from "@/components/PipelineDiagram";
@@ -73,7 +75,7 @@ export default function Home() {
               </div>
 
               <Reveal delay={320} className="hero__fig">
-                <PipelineDiagram variant="engine" />
+                <HeroPortrait />
               </Reveal>
             </div>
           </div>
@@ -86,9 +88,26 @@ export default function Home() {
         <Shatter />
       </section>
 
+      {/* ----------------------------------------------------- 03 machine */}
+      <Panel id="machine" index="01" label="Run it yourself">
+        <div className="work__head">
+          <h2 className="headline" style={{ maxWidth: "26ch" }}>
+            <MaskUp>Five stages.</MaskUp>
+            <MaskUp delay={0.08}>
+              Skip one and the <em className="hl hl-amber">number lies</em>.
+            </MaskUp>
+          </h2>
+          <Reveal delay={120} className="mono kicker">
+            Click through it — the schematic follows you
+          </Reveal>
+        </div>
+
+        <PipelineGame />
+      </Panel>
+
       {/* ------------------------------------------------------- 01 about */}
-      <Panel id="about" index="01" label="About">
-        <Reveal className="mono kicker">{about.kicker}</Reveal>
+      <Panel id="about" index="02" label="About">
+        <div className="about-overview"><Reveal className="mono kicker">{about.kicker}</Reveal>
 
         <h2 className="headline about__head">
           <MaskUp>
@@ -100,32 +119,15 @@ export default function Home() {
           </MaskUp>
         </h2>
 
-        <Reveal delay={80} className="origin">
-          <PipelineDiagram variant="circuit" stops={about.origin} />
-        </Reveal>
+        <OriginMap />
+        </div>
 
         <CapabilityDeck items={capabilities} />
 
-        <Reveal delay={120} className="facts">
-          {about.facts.map((f) => (
-            <div className="facts__row" key={f.k}>
-              <span className="mono">{f.k}</span>
-              <span className="facts__v">
-                {f.link ? (
-                  <a href={f.link} target="_blank" rel="noreferrer" data-cursor="link" className="ul">
-                    {f.v} ↗
-                  </a>
-                ) : (
-                  <b style={f.accent ? { color: toneVar[f.accent] } : undefined}>{f.v}</b>
-                )}
-              </span>
-            </div>
-          ))}
-        </Reveal>
       </Panel>
 
       {/* -------------------------------------------------- 02 experience */}
-      <Panel id="experience" index="02" label="Where I've built">
+      <Panel id="experience" index="03" label="Where I've built">
         {experience.map((job, i) => (
           <div className="job" key={job.company}>
             <Reveal delay={i * 60} className="job__head">
@@ -163,23 +165,6 @@ export default function Home() {
             </Reveal>
           </div>
         ))}
-      </Panel>
-
-      {/* ----------------------------------------------------- 03 machine */}
-      <Panel id="machine" index="03" label="Run it yourself">
-        <div className="work__head">
-          <h2 className="headline" style={{ maxWidth: "26ch" }}>
-            <MaskUp>Five stages.</MaskUp>
-            <MaskUp delay={0.08}>
-              Skip one and the <em className="hl hl-amber">number lies</em>.
-            </MaskUp>
-          </h2>
-          <Reveal delay={120} className="mono kicker">
-            Click through it — the schematic follows you
-          </Reveal>
-        </div>
-
-        <PipelineGame />
       </Panel>
 
       {/* ------------------------------------------------- 04 leadership */}
@@ -319,8 +304,8 @@ export default function Home() {
 
         <div className="footer mono">
           <span>© 2026 Shruti Phad</span>
-          <span>Built, not templated</span>
-          <span>Press ⌘K</span>
+          <span>From first signal to useful systems.</span>
+          <a href="#top">Back to top ↑</a>
         </div>
       </Panel>
     </main>
