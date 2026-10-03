@@ -5,3 +5,7 @@ out
 .vercel
 .DS_Store
 *.log
+
+# Reproducible portfolio publishing workspace
+.portfolio-build/
+.env*
