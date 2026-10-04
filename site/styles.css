@@ -111,3 +111,42 @@ footer { text-align:right; margin-top:28px; font:12px/1.7 var(--sans); color:var
   .intro-copy,.name-block { min-width:0; }
   .curiosity,.shared-contact a { overflow-wrap:anywhere; }
 }
+
+/* Keep the mobile portrait and its introduction in one aligned frame. */
+@media (max-width:600px) {
+  .signature {
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    align-items:stretch;
+    gap:16px;
+  }
+  .signature img {
+    height:100%;
+    aspect-ratio:1;
+    object-fit:cover;
+    object-position:center;
+  }
+  .signature-copy {
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .signature-copy p { font-size:clamp(14px,3.9vw,17px); line-height:1.4; }
+  .socials {
+    display:grid;
+    grid-template-columns:max-content max-content max-content;
+    justify-content:start;
+    gap:0 8px;
+    margin:8px 0 0;
+  }
+  .socials a { min-width:24px; min-height:36px; justify-content:start; }
+  .socials a:nth-of-type(4) { grid-column:1; grid-row:2; }
+  .socials a:nth-of-type(5) { grid-column:2; grid-row:2; }
+  .fancy { flex-wrap:nowrap; gap:12px; font-size:17px; }
+  .fancy-copy { min-width:0; }
+  .fancy-button { flex-shrink:0; padding-inline:14px; }
+}
+@media (max-width:360px) {
+  .signature { gap:12px; }
+  .socials { gap:0 6px; font-size:11px; }
+  .fancy { gap:10px; font-size:16px; }
+}
