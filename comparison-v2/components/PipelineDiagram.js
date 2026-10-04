@@ -107,9 +107,11 @@ function Attribution() {
       <Label x="44" y="48">WHATSAPP</Label>
       <Label x="44" y="128">INSTAGRAM</Label>
       <Label x="44" y="208">MESSENGER</Label>
-      <Label x="430" y="128" anchor="middle">AGENT</Label>
+      <Label x="430" y="128" anchor="middle">N8N → SUPABASE</Label>
+      <Label x="430" y="184" anchor="middle">SAGEPILOT</Label>
       <Label x="566" y="122" anchor="middle" dim={false}>ATTRIBUTED</Label>
       <Label x="762" y="80">RAZORPAY</Label>
+      <Label x="762" y="100">WEBHOOKS</Label>
       <Label x="762" y="224">DAILY REPORT</Label>
 
       <Packet id="atr-0" begin="0s" />
@@ -424,16 +426,8 @@ function AgentFlow() {
 
       <motion.rect x="80" y="138" width="24" height="24" className="dg__node" variants={pop} custom={0} />
       <motion.rect x="232" y="126" width="64" height="48" rx="2" className="dg__node" variants={pop} custom={0.5} />
-      <motion.rect
-        x="414"
-        y="130"
-        width="40"
-        height="40"
-        transform="rotate(45 434 150)"
-        className="dg__node dg__node--key"
-        variants={pop}
-        custom={1}
-      />
+      <motion.circle cx="434" cy="150" r="12" className="dg__node"
+        style={{ stroke: "var(--tint,var(--green))" }} variants={pop} custom={1} />
       <motion.rect x="600" y="136" width="28" height="28" className="dg__node dg__node--key" variants={pop} custom={1.4} />
 
       <Label x="40" y="120">FREE TEXT</Label>
@@ -730,7 +724,8 @@ function Vision() {
 
       <Label x="40" y="58">WEBCAM — LIVE FRAMES</Label>
       <Label x="96" y="272">MEDIAPIPE LANDMARKS</Label>
-      <Label x="396" y="58" anchor="start">CNN</Label>
+      <Label x="396" y="34" anchor="start">AUGMENTED TRAINING SET</Label>
+      <Label x="396" y="58" anchor="start">CNN PIPELINE</Label>
       <Label x="412" y="272">OPENCV PRE-PROCESSING</Label>
       <Label x="694" y="166" dim={false}>TEXT, 90% ACCURATE</Label>
 
@@ -1263,12 +1258,15 @@ const VARIANTS = {
   taxonomy: { render: Taxonomy, box: "0 0 860 300" },
 };
 
-export default function PipelineDiagram({ variant = "attribution", caption, stops, tint }) {
+export default function PipelineDiagram({ variant = "attribution", caption, stops, tint, labelItems }) {
   const ref = useRef(null);
-  const [labels, setLabels] = useState([]);
+  const [autoLabels, setAutoLabels] = useState([]);
+  const labels = labelItems || autoLabels;
   useEffect(() => {
-    setLabels([...new Set(Array.from(ref.current.querySelectorAll("svg text"), node => node.textContent).filter(Boolean))]);
-  }, [variant]);
+    // Explicit labels render on the server, so these panels never grow on hydration.
+    if (labelItems) return;
+    setAutoLabels([...new Set(Array.from(ref.current.querySelectorAll("svg text"), node => node.textContent).filter(Boolean))]);
+  }, [variant, labelItems]);
   const scope = useId().replaceAll(":", "");
   const inView = useInView(ref, { once: true, margin: "0px 0px -60px 0px" });
   const conf = VARIANTS[variant] || VARIANTS.attribution;
@@ -1286,7 +1284,7 @@ export default function PipelineDiagram({ variant = "attribution", caption, stop
       >
         <DiagramScope.Provider value={scope}><Shape stops={stops} /></DiagramScope.Provider>
       </motion.svg>
-      <div className="dg__mobile-labels" aria-label="Schematic labels">{labels.map(label => <span key={label}>{label}</span>)}</div>
+      <div className={`dg__mobile-labels${labelItems ? " dg__labels--visible" : ""}`} aria-label="Schematic labels">{labels.map(label => <span key={label}>{label}</span>)}</div>
       {caption ? <figcaption className="dg__cap mono">{caption}</figcaption> : null}
     </figure>
   );

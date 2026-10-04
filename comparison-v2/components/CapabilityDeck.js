@@ -9,8 +9,7 @@ import { disciplineTones } from "@/lib/design";
 
 /**
  * About and "what I do" are the same section now. Pick a skill on the left
- * and its own schematic draws on the right, followed by the four moves it
- * runs and the tools it runs them with. No body copy anywhere.
+ * and its schematic draws on the right, with one colored label group.
  */
 export default function CapabilityDeck({ items = [] }) {
   const [active, setActive] = useState(0);
@@ -65,7 +64,9 @@ export default function CapabilityDeck({ items = [] }) {
 
         {cap.diagram ? (
           <div className="deck__fig">
-            <PipelineDiagram key={`${cap.key}-fig`} variant={cap.diagram} />
+            <PipelineDiagram key={`${cap.key}-fig`} variant={cap.diagram}
+              stops={cap.flow.map(label => ({ label: label.toUpperCase() }))}
+              labelItems={cap.diagramLabels} tint={tint} />
           </div>
         ) : null}
 
@@ -86,20 +87,6 @@ export default function CapabilityDeck({ items = [] }) {
         </div>
 
         {cap.note ? <span className="deck__note">{cap.note}</span> : null}
-
-        <div className="tags deck__tags">
-          {cap.items.map((t, i) => (
-            <motion.span
-              className="tag"
-              key={t}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.18 + i * 0.026 }}
-            >
-              {t}
-            </motion.span>
-          ))}
-        </div>
       </motion.div>
     </div>
     </div>

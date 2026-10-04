@@ -149,15 +149,8 @@ export default function Home() {
             </Reveal>
 
             <Reveal delay={100 + i * 60} className="job__fig">
-              <PipelineDiagram variant={job.diagram} caption={job.caption} />
-            </Reveal>
-
-            <Reveal delay={140 + i * 60} className="tags job__chips">
-              {job.chips.map((c) => (
-                <span className="tag" key={c}>
-                  {c}
-                </span>
-              ))}
+              <PipelineDiagram variant={job.diagram} caption={job.caption}
+                labelItems={job.diagramLabels} tint={toneVar[job.accent]} />
             </Reveal>
           </div>
         ))}

@@ -336,3 +336,34 @@
   .drop__text,.drop__from { font-size:16px; }
   .mag { transform:none !important; }
 }
+
+/* One colored label group replaces the repeated outlined tag rows. */
+.dg__mobile-labels.dg__labels--visible {
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:14px;
+}
+.dg__labels--visible span {
+  font:10px/1.6 var(--font-mono);
+  letter-spacing:.025em;
+  padding:5px 7px;
+  color:#dce5f6;
+  border-left:1px solid var(--tint,var(--blue));
+  background:color-mix(in srgb,var(--tint,var(--blue)) 10%,#0a0a0a);
+}
+@media(max-width:760px) {
+  html { scroll-behavior:auto; overscroll-behavior-y:none; }
+  .deck__tab[data-next="1"] .deck__name {
+    font-size:var(--invite-size);
+    animation:discipline-fade 2.8s ease-in-out infinite;
+  }
+  .reveal { transform:none !important; filter:none !important; transition-property:opacity; }
+  .rv > span { transform:none !important; will-change:auto !important; }
+  .deck__stage { min-height:460px; }
+  .deck__fig .dg__svg,.job__fig .dg__svg { overflow:hidden; }
+}
+@keyframes discipline-fade { 0%,100% { opacity:1; } 50% { opacity:.65; } }
+@media(prefers-reduced-motion:reduce) {
+  .deck__tab[data-next="1"] .deck__name { animation:none; }
+}
