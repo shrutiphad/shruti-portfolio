@@ -1,1 +1,1 @@
-export default { reactStrictMode: true, output: "export", images: { unoptimized: true } };
+export default { reactStrictMode: true, output: "export", basePath: "/fancy", images: { unoptimized: true } };

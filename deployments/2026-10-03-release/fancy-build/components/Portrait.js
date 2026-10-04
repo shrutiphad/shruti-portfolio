@@ -81,7 +81,7 @@ export default function Portrait() {
     wrap.addEventListener("pointermove", move); wrap.addEventListener("pointerleave", leave);
     reduce.addEventListener("change", preference);
     source.onload = () => { if (!disposed) { loaded = true; resize(); } };
-    source.src = "/shruti-portrait-cutout.png";
+    source.src = "/fancy/shruti-portrait-cutout.png";
     return () => {
       disposed = true; cancelAnimationFrame(frame); ro.disconnect(); io.disconnect();
       wrap.removeEventListener("pointermove", move); wrap.removeEventListener("pointerleave", leave);
@@ -90,7 +90,7 @@ export default function Portrait() {
   }, []);
 
   return <span ref={host} className="portrait-render" data-ready={ready}>
-    <NextImage src="/shruti-portrait-cutout.png" width={1131} height={1391} quality={95}
+    <NextImage src="/fancy/shruti-portrait-cutout.png" width={1131} height={1391} quality={95}
       sizes="(max-width: 600px) 90vw, (max-width: 900px) 560px, 45vw"
       alt="Shruti Phad" priority className="portrait-image" />
     <canvas ref={canvas} className="portrait-reactive" aria-hidden="true" />

@@ -284,7 +284,7 @@ export default function Home() {
                 Substack ↗
               </a>
               <a href={profile.x} target="_blank" rel="noreferrer" data-cursor="link">X ↗</a>
-              <a href="/shruti-phad-resume.pdf" target="_blank" rel="noreferrer" data-cursor="link">
+              <a href="/fancy/shruti-phad-resume.pdf" target="_blank" rel="noreferrer" data-cursor="link">
                 Résumé ↗
               </a>
               <a href={`tel:${profile.phone.replace(/\s/g, "")}`} data-cursor="link">

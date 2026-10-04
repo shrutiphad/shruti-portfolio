@@ -1,0 +1,21 @@
+{
+  "status": "ready_waiting_for_vercel_authentication",
+  "published": false,
+  "contact": "shrutiphadwork@gmail.com",
+  "local_smoke_checks": {
+    "/": 200,
+    "/projects": 200,
+    "/projects/autodraft": 200,
+    "/projects/debrief": 200,
+    "/projects/hotel-receptionist": 200,
+    "/projects/revenue-attribution-pipeline": 200,
+    "/projects/sleepcare": 200,
+    "/projects/uniplacement": 200,
+    "/shruti-phad-resume.pdf": 200,
+    "/shruti-portrait-cutout.png": 200
+  },
+  "fancy_deploy_directory": "C:\\Users\\ADMIN\\Documents\\Portfolio\\deployments\\2026-10-03-release\\fancy-build\\out",
+  "landing_deploy_directory": "C:\\Users\\ADMIN\\Documents\\Portfolio\\deployments\\2026-10-03-release\\landing",
+  "local_working_sources_unchanged": true,
+  "github_pushed": false
+}

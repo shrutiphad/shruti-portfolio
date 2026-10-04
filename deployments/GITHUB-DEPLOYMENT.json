@@ -1,0 +1,17 @@
+{
+  "Id": "dpl_5dB538Q3RvevkNaF5c3dFSECius5",
+  "State": "READY",
+  "URL": "shruti-3n2pdsfbp-shrutiphadwork-6652s-projects.vercel.app",
+  "GitSource": {
+    "type": "github",
+    "repoId": 1402945415,
+    "ref": "main",
+    "sha": "5640a40422b7518468b3e5c89081b654d1bbb936"
+  },
+  "Alias": [
+    "shruti-shrutiphadwork-6652s-projects.vercel.app",
+    "shruti-git-main-shrutiphadwork-6652s-projects.vercel.app"
+  ],
+  "ProductionURL": "https://shrutiphad.vercel.app/",
+  "LegacyURL": "https://shruti-phad-portfolio.vercel.app/"
+}

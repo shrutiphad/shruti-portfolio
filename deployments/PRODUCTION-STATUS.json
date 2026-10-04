@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-04",
+  "status": "production_ready_from_github",
+  "provider": "Vercel",
+  "project_id": "prj_9Siiqsn8zEDXOuW2mOvutty9imvp",
+  "deployment_id": "dpl_7G7NBzKox85aW2aetZHpNiU4kETC",
+  "production_url": "https://shrutiphad.vercel.app/",
+  "fancy_url": "https://shrutiphad.vercel.app/fancy",
+  "repository": "https://github.com/shrutiphad/shruti-portfolio",
+  "source_commit": "e128089f9fa73996cce13283615d710a5efd687b",
+  "publishing_method": "Production deployment pulled directly from connected GitHub main commit",
+  "github_push": "complete",
+  "rollback_deployment": "dpl_7JM8ee8Sy2afiHs5BivD3t9REwxi",
+  "rollback_url": "https://shruti-phad-portfolio-g6udk8b3p-shrutiphadwork-6652s-projects.vercel.app",
+  "contact": "shrutiphadwork@gmail.com",
+  "verification": {
+    "vercel_status": "READY",
+    "build_compile_and_type_checks": "passed",
+    "static_pages_generated": 12,
+    "landing_widths_verified": [
+      320,
+      390,
+      430,
+      1366
+    ],
+    "fancy_widths_verified": [
+      320,
+      390,
+      430,
+      1366
+    ],
+    "all_four_discipline_panels_verified_at": [
+      320,
+      390,
+      1366
+    ],
+    "no_horizontal_overflow_at_tested_widths": true,
+    "original_photo_byte_for_byte_preserved_locally_and_live": true,
+    "mobile_photo_fit": "contain",
+    "mobile_photo_frame": "square",
+    "mobile_caption_and_all_links_within_photo_height": true,
+    "duplicate_experience_and_capability_tag_rows_removed": true,
+    "important_details_in_colored_labels": true,
+    "mobile_scroll_document_height_section_position_and_font_size_stable": true,
+    "mobile_demo_all_five_stages_passed": true,
+    "live_landing_to_fancy_navigation": "passed",
+    "live_debrief_href": "https://github.com/shrutiphad/Debrief",
+    "current_http_200": [
+      {
+        "path": "/",
+        "status": 200
+      },
+      {
+        "path": "/styles.css",
+        "status": 200
+      },
+      {
+        "path": "/fancy",
+        "status": 200
+      },
+      {
+        "path": "/fancy/_next/static/css/1208c0fbc6feea37.css",
+        "status": 200
+      },
+      {
+        "path": "/assets/shruti-portrait.jpeg",
+        "status": 200
+      }
+    ],
+    "browser_checks": "C:\\Users\\ADMIN\\.codex\\visualizations\\2026\\10\\01\\01a0f895-9242-7791-b536-bd1e99ab2b0d\\final-mobile-layout-checks.json",
+    "photo_screenshot": "C:\\Users\\ADMIN\\.codex\\visualizations\\2026\\10\\01\\01a0f895-9242-7791-b536-bd1e99ab2b0d\\final-mobile-footer-live.png",
+    "fancy_screenshot": "C:\\Users\\ADMIN\\.codex\\visualizations\\2026\\10\\01\\01a0f895-9242-7791-b536-bd1e99ab2b0d\\final-fancy-footer-live.png",
+    "browser_viewport_restored": true,
+    "mobile_intro_copy": "&amp; i'm curious about how i can help YOU with it.",
+    "mobile_closing_copy": "wait, i do have a fancy portfolio as well.",
+    "mobile_social_spacing_px": {
+      "320": 8,
+      "390": 12,
+      "430": 12
+    },
+    "desktop_landing_copy_preserved": true,
+    "fancy_footer_credit_final_row_right_aligned": true
+  },
+  "current_vercel_project_name": "shruti",
+  "initial_manual_deployment_id": "dpl_BGqCVkouJmDxtX3FtpwrVD8NGh8W",
+  "legacy_url": "https://shruti-phad-portfolio.vercel.app/",
+  "legacy_redirect_verified": true,
+  "git_connection_verified": true,
+  "git_production_branch": "main",
+  "git_source_repo_id": 1402945415,
+  "github_checkout_clean": true,
+  "change": "Mobile-only landing copy, deliberate line breaks and social spacing; fancy footer credit aligned right on its final row. Original photo and desktop landing copy preserved.",
+  "previous_deployment_id": "dpl_Cyx1ZmgWyjckQJPsTeGUbqR5VrAS",
+  "design_preferences": "C:\\Users\\ADMIN\\Documents\\Portfolio\\deployments\\DESIGN-PREFERENCES.md"
+}
