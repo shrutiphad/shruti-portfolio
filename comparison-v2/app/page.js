@@ -293,9 +293,9 @@ export default function Home() {
         </div>
 
         <div className="footer mono">
-          <span>Crafted by Shruti Phad.</span>
           <span>From first signal to useful systems.</span>
           <a href="#top">Back to top ↑</a>
+          <span className="footer__credit">Crafted by Shruti Phad.</span>
         </div>
       </Panel>
     </main>

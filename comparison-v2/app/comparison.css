@@ -367,3 +367,14 @@
 @media(prefers-reduced-motion:reduce) {
   .deck__tab[data-next="1"] .deck__name { animation:none; }
 }
+
+/* Keep the closing credit on its own final row, aligned with the landing page. */
+#contact .footer {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+}
+#contact .footer__credit {
+  grid-column:1 / -1;
+  text-align:right;
+}

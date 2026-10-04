@@ -151,3 +151,17 @@ footer { text-align:right; margin-top:28px; font:12px/1.7 var(--sans); color:var
   .socials { gap:0 6px; font-size:11px; }
   .fancy { gap:10px; font-size:16px; }
 }
+
+/* Final phone-only copy and spacing. Desktop wording stays unchanged. */
+.mobile-copy { display:none; }
+.keep-together { white-space:nowrap; }
+@media (max-width:600px) {
+  .desktop-copy { display:none; }
+  .mobile-copy { display:inline; }
+  .socials { margin-top:12px; }
+  .fancy { flex-direction:column; }
+}
+@media (max-width:360px) {
+  .socials { margin-top:8px; }
+  .socials a { min-height:26px; }
+}
