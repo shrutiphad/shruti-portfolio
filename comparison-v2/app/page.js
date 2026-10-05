@@ -70,7 +70,7 @@ export default function Home() {
                 <Reveal delay={340} className="hero-social"><SocialLinks /></Reveal>
               </div>
 
-              <Reveal delay={320} className="hero__fig">
+              <Reveal className="hero__fig">
                 <HeroPortrait />
               </Reveal>
             </div>

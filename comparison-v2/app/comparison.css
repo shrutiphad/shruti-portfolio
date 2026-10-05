@@ -383,3 +383,11 @@
 @media(max-width:760px) {
   .deck__tab[data-next="1"] .deck__name { transform-origin:left center; }
 }
+
+/* A decoded-photo fade, without changing its frame, crop or hover effect. */
+.hero__fig.reveal { transition-duration:.55s; transition-delay:0ms; }
+.portrait-render { opacity:0; transition:opacity .4s ease; }
+.portrait-render[data-loaded=true] { opacity:1; }
+@media(prefers-reduced-motion:reduce) {
+  .portrait-render { opacity:1; transition:none; }
+}

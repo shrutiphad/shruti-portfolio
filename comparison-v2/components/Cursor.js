@@ -66,6 +66,7 @@ export default function Cursor() {
         panel.style.setProperty("--px", `${((x - r.left) / r.width) * 100}%`);
         panel.style.setProperty("--py", `${((y - r.top) / r.height) * 100}%`);
       }
+      if (!raf) raf = requestAnimationFrame(loop);
     };
 
     const onOver = (e) => {
@@ -84,9 +85,12 @@ export default function Cursor() {
       dot.style.opacity = "0";
       box.style.opacity = "0";
       live = false;
+      cancelAnimationFrame(raf); raf = 0;
     };
 
     const loop = () => {
+      raf = 0;
+      if (!live || document.hidden) return;
       const k = reduce.matches ? 1 : 0.17;
       const dx = x - bx;
       const dy = y - by;
@@ -111,18 +115,20 @@ export default function Cursor() {
       // keep the word upright while the frame around it turns
       label.style.transform = `rotate(${(-angle).toFixed(2)}deg)`;
 
-      raf = requestAnimationFrame(loop);
+      // Keep the same spring, but stop drawing when the pointer settles.
+      if (speed > .05 || Math.abs(targetStretch - stretch) > .001) raf = requestAnimationFrame(loop);
     };
 
     dot.style.opacity = "0";
     box.style.opacity = "0";
-    raf = requestAnimationFrame(loop);
+    const onVisibility = () => { if (document.hidden) onLeave(); };
 
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseover", onOver, { passive: true });
     window.addEventListener("mousedown", onDown);
     window.addEventListener("mouseup", onUp);
     document.addEventListener("mouseleave", onLeave);
+    document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       cancelAnimationFrame(raf);
@@ -131,6 +137,7 @@ export default function Cursor() {
       window.removeEventListener("mousedown", onDown);
       window.removeEventListener("mouseup", onUp);
       document.removeEventListener("mouseleave", onLeave);
+      document.removeEventListener("visibilitychange", onVisibility);
       document.documentElement.classList.remove("has-cursor");
       dot.remove();
       box.remove();

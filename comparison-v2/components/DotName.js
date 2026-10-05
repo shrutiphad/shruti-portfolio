@@ -30,6 +30,8 @@ export default function DotName({ text = "Shruti Phad", className = "" }) {
     let h = 0;
     let dpr = 1;
     let started = 0;
+    let fontsReady = false;
+    let palette;
     const pointer = { x: -9999, y: -9999, active: false };
 
     const colours = () => {
@@ -41,7 +43,10 @@ export default function DotName({ text = "Shruti Phad", className = "" }) {
     };
 
     const build = () => {
+      if (!fontsReady || disposed) return;
       const rect = wrap.getBoundingClientRect();
+      if (dots.length && Math.abs(rect.width - w) < .5) return;
+      palette = colours();
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = Math.max(rect.width, 1);
       // the field is as tall as the type it holds
@@ -100,7 +105,7 @@ export default function DotName({ text = "Shruti Phad", className = "" }) {
       raf = 0;
       if (disposed || !visible) return;
       let moving = false;
-      const { fg, blue } = colours();
+      const { fg, blue } = palette;
       // Clear every backing pixel, including fractional CSS-size edges.
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -153,6 +158,7 @@ export default function DotName({ text = "Shruti Phad", className = "" }) {
     };
 
     const onMove = (e) => {
+      if (!visible || disposed || reduce.matches) return;
       const rect = canvas.getBoundingClientRect();
       pointer.x = e.clientX - rect.left;
       pointer.y = e.clientY - rect.top;
@@ -167,7 +173,7 @@ export default function DotName({ text = "Shruti Phad", className = "" }) {
 
     const fonts = document.fonts?.ready ?? Promise.resolve();
     fonts.then(() => {
-      if (!disposed) build();
+      if (!disposed) { fontsReady = true; build(); }
     });
 
     const ro = new ResizeObserver(() => build());
@@ -176,7 +182,7 @@ export default function DotName({ text = "Shruti Phad", className = "" }) {
     window.addEventListener("mouseout", onOut);
     const visibility = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
-      if (visible && !raf) raf = requestAnimationFrame(frame);
+      if (visible && dots.length && !raf) raf = requestAnimationFrame(frame);
       if (!visible) { cancelAnimationFrame(raf); raf = 0; }
     });
     visibility.observe(wrap);

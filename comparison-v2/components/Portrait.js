@@ -9,12 +9,16 @@ export default function Portrait() {
   const host = useRef(null);
   const canvas = useRef(null);
   const [ready, setReady] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   useEffect(() => {
     const wrap = host.current, el = canvas.current;
-    const ctx = el.getContext("2d");
-    const source = new window.Image();
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+    // Touch devices keep the original image; they do not need a pixel canvas.
+    if (!fine.matches || reduce.matches) return;
+    const source = wrap.querySelector("img");
+    const ctx = el.getContext("2d");
+    if (!source || !ctx) return;
     let tiles = [], width = 0, height = 0, frame = 0, loaded = false, visible = true, disposed = false;
     const pointer = { x: 0, y: 0, active: false };
     const gap = 6;
@@ -30,7 +34,7 @@ export default function Portrait() {
     }
     function tick() {
       frame = 0;
-      if (!loaded || !visible || disposed) return;
+      if (!loaded || !visible || disposed || document.hidden || reduce.matches || !fine.matches) return;
       let moving = false;
       const radius = Math.min(90, width * .2);
       for (const t of tiles) {
@@ -54,7 +58,7 @@ export default function Portrait() {
     }
     function wake() { if (!frame && loaded && visible && !disposed) frame = requestAnimationFrame(tick); }
     function resize() {
-      if (!loaded || disposed) return;
+      if (!loaded || disposed || reduce.matches || !fine.matches) return;
       width = wrap.clientWidth; height = wrap.clientHeight;
       if (!width || !height) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -71,7 +75,16 @@ export default function Portrait() {
       pointer.x = e.clientX - r.left; pointer.y = e.clientY - r.top; pointer.active = true; wake();
     }
     function leave() { pointer.active = false; wake(); }
-    function preference() { leave(); resize(); }
+    function preference() {
+      pointer.active = false;
+      cancelAnimationFrame(frame); frame = 0;
+      if (reduce.matches || !fine.matches) setReady(false);
+      else resize();
+    }
+    function visibility() {
+      if (document.hidden) { pointer.active = false; cancelAnimationFrame(frame); frame = 0; }
+      else if (visible) wake();
+    }
     const ro = new ResizeObserver(resize);
     const io = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
@@ -80,19 +93,29 @@ export default function Portrait() {
     ro.observe(wrap); io.observe(wrap);
     wrap.addEventListener("pointermove", move); wrap.addEventListener("pointerleave", leave);
     reduce.addEventListener("change", preference);
-    source.onload = () => { if (!disposed) { loaded = true; resize(); } };
-    source.src = "/shruti-portrait-cutout.png";
+    fine.addEventListener("change", preference);
+    document.addEventListener("visibilitychange", visibility);
+    async function load() {
+      if (loaded || disposed || !source.naturalWidth) return;
+      try { await source.decode(); } catch { /* A loaded image can still be drawn. */ }
+      if (!disposed && !loaded) { loaded = true; resize(); }
+    }
+    source.addEventListener("load", load);
+    if (source.complete) load();
     return () => {
       disposed = true; cancelAnimationFrame(frame); ro.disconnect(); io.disconnect();
       wrap.removeEventListener("pointermove", move); wrap.removeEventListener("pointerleave", leave);
-      reduce.removeEventListener("change", preference); source.onload = null;
+      reduce.removeEventListener("change", preference);
+      fine.removeEventListener("change", preference);
+      document.removeEventListener("visibilitychange", visibility);
+      source.removeEventListener("load", load);
     };
   }, []);
 
-  return <span ref={host} className="portrait-render" data-ready={ready}>
+  return <span ref={host} className="portrait-render" data-ready={ready} data-loaded={imageLoaded}>
     <NextImage src="/shruti-portrait-cutout.png" width={1131} height={1391} quality={95}
       sizes="(max-width: 600px) 90vw, (max-width: 900px) 560px, 45vw"
-      alt="Shruti Phad" priority className="portrait-image" />
+      alt="Shruti Phad" priority onLoad={() => setImageLoaded(true)} className="portrait-image" />
     <canvas ref={canvas} className="portrait-reactive" aria-hidden="true" />
   </span>;
 }
