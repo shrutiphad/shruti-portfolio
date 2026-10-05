@@ -419,7 +419,7 @@ export const projects = [
 ];
 
 export const skills = {
-  "Full stack": ["Next.js", "React", "JavaScript", "TypeScript", "FastAPI", "Node.js", "Express", "PostgreSQL", "MongoDB", "Python", "SQL", "Java", "Docker", "Git", "Vercel", "Render", "AWS", "Linux"],
-  "AI agents & automation": ["LangGraph", "LangChain", "Claude", "Groq", "RAG", "NL-to-SQL", "Pydantic", "pgvector", "ChromaDB", "OpenCV", "MediaPipe"],
+  "Full stack": ["Next.js", "React", "JavaScript", "TypeScript", "FastAPI", "Node.js", "Express", "PostgreSQL", "MongoDB", "Python", "SQL", "Docker", "Git", "Vercel", "AWS"],
+  "AI agents & automation": ["LangGraph", "LangChain", "NumPy", "Pandas", "RAG", "NL-to-SQL", "Pydantic", "pgvector", "ChromaDB", "OpenCV", "MediaPipe"],
   "GTM": ["Clay", "Claygent", "HubSpot", "SmartLead", "Apollo", "Slack", "n8n", "Supabase", "Make", "Zapier", "Instantly", "Sales Navigator"],
 };

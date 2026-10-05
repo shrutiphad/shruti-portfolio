@@ -16,8 +16,12 @@ for (const file of ['package.json', 'package-lock.json', 'jsconfig.json']) {
 await writeFile(resolve(build, 'next.config.mjs'), 'export default { reactStrictMode: true, output: "export", basePath: "/fancy", images: { unoptimized: true } };\n');
 const portraitPath = resolve(build, 'components/Portrait.js');
 await writeFile(portraitPath, (await readFile(portraitPath, 'utf8')).replaceAll('"/shruti-portrait-cutout.png"', '"/fancy/shruti-portrait-cutout.png"'));
-const homePath = resolve(build, 'app/page.js');
-await writeFile(homePath, (await readFile(homePath, 'utf8')).replaceAll('href="/shruti-phad-resume.pdf"', 'href="/fancy/shruti-phad-resume.pdf"'));
+for (const file of ['app/page.js', 'components/SocialLinks.js', 'components/CommandPalette.js']) {
+  const path = resolve(build, file);
+  const source = await readFile(path, 'utf8');
+  if (!source.includes('"/shruti-phad-resume.pdf"')) throw new Error(`Missing resume link in ${file}`);
+  await writeFile(path, source.replaceAll('"/shruti-phad-resume.pdf"', '"/fancy/shruti-phad-resume.pdf"'));
+}
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 for (const args of [['ci', '--no-audit', '--no-fund'], ['run', 'build']]) {
   const result = spawnSync(npm, args, { cwd: build, stdio: 'inherit', shell: process.platform === 'win32' });

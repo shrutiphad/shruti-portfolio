@@ -159,7 +159,8 @@ footer { text-align:right; margin-top:28px; font:12px/1.7 var(--sans); color:var
   .desktop-copy { display:none; }
   .mobile-copy { display:inline; }
   .socials { margin-top:12px; }
-  .fancy { flex-direction:column; }
+  .fancy { flex-direction:row; justify-content:space-between; }
+  .fancy-copy { flex:1; text-align:left; }
 }
 @media (max-width:360px) {
   .socials { margin-top:8px; }
